@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      var data;
+      socket.on('data', function(msg){
+        console.log(msg.hello);
+        $('body').append('<div>'+msg.hello+'</div>');
+      });
+    </script>
+    <script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
+    <div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
+    <script language="javascript">
+    	VK.init({
+    		apiId: 	5101268
+    	});
+    	function authInfo(response) {
+    	  if (response.session) {
+    		console.log(response.status);
+    	  } else {
+    		alert('not auth');
+    	  }
+    	}
+    	VK.UI.button('login_button');
+      VK.Api.call('audio.get', {owner_id: 80990642}, function(r) {
+        console.log(r.response[0]);
+      });
+
+    </script>
+  </body>
+</html>
