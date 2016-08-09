@@ -7,35 +7,26 @@
  *
  *  MIT License
  */
+ function findToken(url){
+     let a = url.indexOf('#access_token');
+     let b = url.indexOf('&expires_in');
+     let result = url.substring(a+14,b);
+     return result;
+ };
 
 
-
- var promise = new Promise(function(resolve, reject) {
-   function findToken(url){
-       let a = url.indexOf('#access_token');
-       let b = url.indexOf('&expires_in');
-       let result = url.substring(a+14,b);
-       return result;
-   };
-
-   var script = document.createElement('SCRIPT');
-   script.src = "https://api.vk.com/method/audio.get?owner_id=80990642&access_token=&v=5.53&callback=callbackFunc&access_token="+findToken(window.location.href);
-   document.getElementsByTagName("head")[0].appendChild(script);
-   function callbackFunc(result) {
-     console.log(result);
-     var song_src = [];
-     var songs = result.response.items;
-     songs.forEach(function(item,i,arr){
-             song_src.push(item.url);
-     });
-   };
-
- });
-
- promise.then(apiIsReady);
- function apiIsReady(){
-   console.log(song_src);
- }
+var script = document.createElement('SCRIPT');
+ script.src = "https://api.vk.com/method/audio.get?owner_id=80990642&access_token=&v=5.53&callback=callbackFunc&access_token="+findToken(window.location.href);
+ document.getElementsByTagName("head")[0].appendChild(script);
+ function callbackFunc(result) {
+   console.log(result);
+   var song_src = [];
+   var songs = result.response.items;
+   songs.forEach(function(item,i,arr){
+           song_src.push(item.url);
+   });
+ };
+    console.log(song_src);
 // Cache references to DOM elements.
 var elms = ['track', 'timer', 'duration', 'playBtn', 'pauseBtn', 'prevBtn', 'nextBtn', 'playlistBtn', 'volumeBtn', 'progress', 'bar', 'wave', 'loading', 'playlist', 'list', 'volume', 'barEmpty', 'barFull', 'sliderBtn'];
 elms.forEach(function(elm) {
