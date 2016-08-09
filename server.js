@@ -1,23 +1,15 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var express = require("express");
+var app = express();
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+/* serves main page */
+app.get("/", function(req, res) {
+   res.sendfile('index.html')
+});
+/* serves all the static files */
+app.get(/^(.+)$/, function(req, res){
+    res.sendfile( __dirname + req.params[0]);
 });
 
-io.on('connection', function(socket){
-  io.emit('data',{hello:'asd'});
+app.listen(3000, function() {
+  console.log("Listening on 8080");
 });
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
-});
-
-var request = require("request"),
-    cheerio = require("cheerio"),
-    url = "http://new.vk.com/audios80990642";
-
-/*request(url, function (error, response, body) {
-
-});*/
