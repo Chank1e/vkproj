@@ -5,6 +5,13 @@
   <meta name="viewport" content="user-scalable=no">
   <title>VK proj with howlerjs</title>
   <link rel="stylesheet" href="player/styles.css">
+  <style>
+    #auth {
+      top:0;
+      left:0;
+      position: absolute;
+    }
+  </style>
 </head>
 <body>
   <!-- Top Info -->
@@ -44,7 +51,7 @@
     <div id="sliderBtn"></div>
   </div>
   <!-- Scripts -->
-  <a href="https://oauth.vk.com/authorize?client_id=5101268&display=popup&redirect_uri=http://localhost:3000&scope=audio&response_type=token" class="auth">VK AUTH</a>
+  <a href="https://oauth.vk.com/authorize?client_id=5101268&display=popup&redirect_uri=http://localhost:3000&scope=audio&response_type=token" id="auth">VK AUTH</a>
   <script src="player/howler.core.js"></script>
   <script src="player/siriwave.js"></script>
   <script src="player/player.js"></script>

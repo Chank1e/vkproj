@@ -10,32 +10,36 @@
 
 
 
- var promise = new Promise(function(resolve, reject) {
-   function findToken(url){
-       let a = url.indexOf('#access_token');
-       let b = url.indexOf('&expires_in');
-       let result = url.substring(a+14,b);
-       return result;
-   };
+ function findToken(url){
+    let a = url.indexOf('#access_token');
+    let b = url.indexOf('&expires_in');
+    let result = url.substring(a+14,b);
+    return result;
+};
+function findOwner(url){
+  let a = url.indexOf('user_id=');
+  let result = url.substring(a+8,url.length);
+  return result;
+};
+function isLog(){
+  if(window.location.href.indexOf('#access_token')){
+    var login = document.getElementById('auth');
+    login.style.display = 'none';
+  }
+};
+isLog();
+var song_src = [];
 
-   var script = document.createElement('SCRIPT');
-   script.src = "https://api.vk.com/method/audio.get?owner_id=80990642&access_token=&v=5.53&callback=callbackFunc&access_token="+findToken(window.location.href);
-   document.getElementsByTagName("head")[0].appendChild(script);
-   function callbackFunc(result) {
-     console.log(result);
-     var song_src = [];
-     var songs = result.response.items;
-     songs.forEach(function(item,i,arr){
-             song_src.push(item.url);
-     });
-   };
+var script = document.createElement('SCRIPT');
+script.src = "https://api.vk.com/method/audio.get?owner_id="+findOwner(window.location.href)+"&access_token=&v=5.53&callback=callbackFunc&access_token="+findToken(window.location.href);
+document.getElementsByTagName("head")[0].appendChild(script);
 
- });
-
- promise.then(apiIsReady);
- function apiIsReady(){
-   console.log(song_src);
- }
+function callbackFunc(result) {
+  var songs = result.response.items;
+  songs.forEach((item) => {
+   song_src.push({title:item.artist+' - '+item.title,file:item.url,howl:null});
+  });
+};
 // Cache references to DOM elements.
 var elms = ['track', 'timer', 'duration', 'playBtn', 'pauseBtn', 'prevBtn', 'nextBtn', 'playlistBtn', 'volumeBtn', 'progress', 'bar', 'wave', 'loading', 'playlist', 'list', 'volume', 'barEmpty', 'barFull', 'sliderBtn'];
 elms.forEach(function(elm) {
@@ -51,10 +55,10 @@ var Player = function(playlist) {
   this.index = 0;
 
   // Display the title of the first track.
-  track.innerHTML = '1. ' + playlist[0].title;
+  setTimeout(function(){track.innerHTML = '1. ' + playlist[0].title;},1000);
 
   // Setup the playlist display.
-  playlist.forEach(function(song) {
+  setTimeout(function(){playlist.forEach(function(song) {
     var div = document.createElement('div');
     div.className = 'list-song';
     div.innerHTML = song.title;
@@ -62,7 +66,7 @@ var Player = function(playlist) {
       player.skipTo(playlist.indexOf(song));
     };
     list.appendChild(div);
-  });
+  });},1000);
 };
 Player.prototype = {
   /**
@@ -82,7 +86,7 @@ Player.prototype = {
       sound = data.howl;
     } else {
       sound = data.howl = new Howl({
-        src: song_src,
+        src: data.file,
         html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
         onplay: function() {
           // Display the duration.
@@ -198,7 +202,7 @@ Player.prototype = {
     progress.style.width = '0%';
 
     // Play the new track.
-    self.play(index);
+    setTimeout(function(){self.play(index);},500);
   },
 
   /**
@@ -296,23 +300,7 @@ Player.prototype = {
 };
 
 // Setup our new audio player class and pass it the playlist.
-var player = new Player([
-  {
-    title: 'Rave Digger',
-    file: 'rave_digger',
-    howl: null
-  },
-  {
-    title: '80s Vibe',
-    file: '80s_vibe',
-    howl: null
-  },
-  {
-    title: 'Running Out',
-    file: 'running_out',
-    howl: null
-  }
-]);
+var player = new Player(song_src);
 
 // Bind our player controls.
 playBtn.addEventListener('click', function() {
