@@ -22,13 +22,14 @@ function findOwner(url){
   return result;
 };
 function isLog(){
-  if(window.location.href.indexOf('#access_token')){
+  if(window.location.href.indexOf('#access_token')+1){
     var login = document.getElementById('auth');
     login.style.display = 'none';
   }
 };
 isLog();
 var song_src = [];
+console.log(window.location.href.indexOf('#access_token'));
 
 var script = document.createElement('SCRIPT');
 script.src = "https://api.vk.com/method/audio.get?owner_id="+findOwner(window.location.href)+"&access_token=&v=5.53&callback=callbackFunc&access_token="+findToken(window.location.href);
